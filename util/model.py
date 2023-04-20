@@ -11,7 +11,7 @@ def movenet(input_image):
     output_details = interpreter.get_output_details()
     interpreter.set_tensor(input_details[0]['index'], input_image.numpy())
     # Invoke inference.
-    interpreter.invoke()
+    interpreter.invoke() 
     # Get the model prediction.
     keypoints_with_scores = interpreter.get_tensor(output_details[0]['index'])
     return keypoints_with_scores
