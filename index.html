@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .img {
+                position: relative;
+                border: solid 1px #000;
+                display: inline-block;
+            }
+
+                .img .marker {
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    background: #f00;
+                }
+    </style>
+</head>
+<body>
+    <input type="text">
+    <div class="img" id="fa">
+        <!-- <img src="./imgs/test.png" alt="" id = 'img' > -->
+        <video src="./imgs/fit.mp4" autoplay controls id = 'img'></video>
+    </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+<script>
+    function createMarker(x, y) {
+            var div = document.createElement('div');
+            div.className = 'marker'; div.style.left = x + 'px'; div.style.top = y + 'px';
+            document.getElementById("fa").appendChild(div)
+        }
+    //创建检测器。
+    async function getData() {
+        const detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
+        //将视频串流传递给模型以检测姿态。
+        const video = document.getElementById('img');
+        const poses = await detector.estimatePoses(video);
+        console.log(poses)
+        poses[0]["keypoints"].forEach(val => {
+            createMarker(val.x, val.y)
+        })
+    }
+    getData()
+</script>
+</html>
